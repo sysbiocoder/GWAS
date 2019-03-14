@@ -1,0 +1,12 @@
+library(base)
+library(HardyWeinberg)
+r = read.table("Normal_zyg.txt", header=T, sep = "\t",stringsAsFactors=FALSE)
+X <- r[,8:10]
+n <- rowSums(X)
+f <-  (as.matrix(X)%*%as.matrix(c(0,1,2)))/(2*n)
+hwe =c((1-f)^2,2*f*(1-f),f^2)
+#rbind(obs=X/n,hwe=hwe)
+ ht <- rowSums((X-n*hwe)^2/(n*hwe))
+hp <- pchisq(ht,df=1,lower=FALSE)
+out <- cbind(r[,1],X,f, ht,hp)
+write.table(out,"nor_hw.txt",sep="\t",quote=F)
